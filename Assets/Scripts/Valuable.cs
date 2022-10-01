@@ -10,7 +10,7 @@ public class Valuable : MonoBehaviour
 
     public void SetupAppearance()
     {
-        m_SpriteRenderer.color = m_ValuableObject.m_ValuableColor;
+        m_SpriteRenderer.sprite = m_ValuableObject.m_Sprite;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
