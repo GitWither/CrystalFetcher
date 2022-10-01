@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 cameraTargetPos = new Vector3(transform.position.x, transform.position.y, -10);
         m_PlayerCamera.position =
-            Vector3.SmoothDamp(m_PlayerCamera.position, cameraTargetPos, ref m_CurrentVelocity, 0.2f, 5f);
+            Vector3.SmoothDamp(m_PlayerCamera.position, cameraTargetPos, ref m_CurrentVelocity, 0.05f, 5f);
     }
     // Update is called once per frame
     void FixedUpdate()

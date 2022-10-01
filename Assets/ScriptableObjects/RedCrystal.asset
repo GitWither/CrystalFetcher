@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a64e73b295abfa47aaa02cd6825c319, type: 3}
-  m_Name: Diamond
+  m_Name: RedCrystal
   m_EditorClassIdentifier: 
-  m_ValuableName: Diamond
+  m_ValuableName: Red Crystal
   m_MoneyValue: 0
-  m_ValuableColor: {r: 0, g: 0.9248905, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 886acd0da709bd647abf29cf21aae983, type: 3}
+  m_LightColor: {r: 0.8207547, g: 0.034843344, b: 0.034843344, a: 1}

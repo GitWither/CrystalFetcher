@@ -22,6 +22,7 @@ public class GameRunner : MonoBehaviour
 
     public ValuablesSpawner m_Spawner;
 
+    [Header("UI Manager")]
     public Slider m_ProgressSlider;
 
     void Start()
@@ -31,7 +32,7 @@ public class GameRunner : MonoBehaviour
 
     void Update()
     {
-        m_ProgressSlider.value = 1.0f - (m_ElapsedTicks / 500.0f);
+        m_ProgressSlider.value = m_RoundRunning ? 1.0f - (m_ElapsedTicks / (float)RoundDuration) : 1.0f - (m_RoundCooldown / (float)RoundCooldownDuration);
     }
 
     // Update is called once per frame

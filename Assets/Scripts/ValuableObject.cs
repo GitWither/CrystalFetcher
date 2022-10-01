@@ -8,4 +8,5 @@ public class ValuableObject : ScriptableObject
     public string m_ValuableName;
     public float m_MoneyValue;
     public Sprite m_Sprite;
+    public Color m_LightColor;
 }
