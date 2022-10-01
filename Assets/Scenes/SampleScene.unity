@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 480207730}
   - component: {fileID: 480207729}
+  - component: {fileID: 480207731}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -173,6 +174,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &480207731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480207728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f5a5a0bef61b240ab4dee3102984d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpawnPosition: {x: 0, y: 0}
+  m_Player: {fileID: 694852824}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +301,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 393176c0d8222c54d88103d4550c74ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 0.5
+  m_Speed: 2.5
+  m_PlayerCamera: {fileID: 519420032}
 --- !u!212 &694852823
 SpriteRenderer:
   m_ObjectHideFlags: 0

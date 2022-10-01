@@ -7,4 +7,5 @@ public class ValuableObject : ScriptableObject
 {
     public string m_ValuableName;
     public float m_MoneyValue;
+    public Color m_ValuableColor;
 }
