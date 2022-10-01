@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class GameRunner : MonoBehaviour
@@ -22,8 +24,15 @@ public class GameRunner : MonoBehaviour
 
     public ValuablesSpawner m_Spawner;
 
-    [Header("UI Manager")]
+    [Header("UI")]
     public Slider m_ProgressSlider;
+
+    public Image m_ProgressFill;
+    public Sprite m_ProgressRound;
+    public Sprite m_ProgressCooldown;
+
+    public GameObject m_InfoPrefab;
+    public GameObject m_NeededCrystalsPanel;
 
     void Start()
     {
@@ -52,6 +61,8 @@ public class GameRunner : MonoBehaviour
             m_RoundRunning = true;
 
             StartRound();
+
+            m_ProgressFill.sprite = m_ProgressRound;
         }
 
         if (m_RoundRunning && (m_ElapsedTicks == RoundDuration || m_CurrentValuables.Count == 0))
@@ -60,6 +71,8 @@ public class GameRunner : MonoBehaviour
             m_RoundRunning = false;
 
             EndRound();
+
+            m_ProgressFill.sprite = m_ProgressCooldown;
         }
     }
 
@@ -105,8 +118,16 @@ public class GameRunner : MonoBehaviour
             }
 
             m_CurrentValuables.Add(rolledValuableObject, count);
+            AddValuableToPanel(rolledValuableObject, count);
         }
 
+    }
+
+    void AddValuableToPanel(ValuableObject obj, int count)
+    {
+        GameObject info = Instantiate(m_InfoPrefab, m_NeededCrystalsPanel.transform);
+        info.GetComponentInChildren<Image>().sprite = obj.m_Sprite;
+        info.GetComponentInChildren<TMP_Text>().text = $"x{count}";
     }
 
     public void Collect(ValuableObject obj)

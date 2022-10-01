@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         Valuable val = col.GetComponent<Valuable>();
+        val.m_ParticleSystem.Play();
         if (m_GameManager.IsExpectedValuable(val.m_ValuableObject))
         {
             m_GameManager.Collect(val.m_ValuableObject);
