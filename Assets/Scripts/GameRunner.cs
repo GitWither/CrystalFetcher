@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameRunner : MonoBehaviour
 {
@@ -21,9 +22,16 @@ public class GameRunner : MonoBehaviour
 
     public ValuablesSpawner m_Spawner;
 
+    public Slider m_ProgressSlider;
+
     void Start()
     {
         
+    }
+
+    void Update()
+    {
+        m_ProgressSlider.value = 1.0f - (m_ElapsedTicks / 500.0f);
     }
 
     // Update is called once per frame
@@ -57,7 +65,7 @@ public class GameRunner : MonoBehaviour
     void EndRound()
     {
         ResetPlayerPosition();
-        ClearValuabes();
+        ClearValuables();
     }
 
     void StartRound()
@@ -72,14 +80,15 @@ public class GameRunner : MonoBehaviour
         return m_CurrentValuables.ContainsKey(obj);
     }
 
-    void ClearValuabes()
+    void ClearValuables()
     {
         m_CurrentValuables.Clear();
+        m_Spawner.Clear();
     }
 
     void PickValuable()
     {
-        ClearValuabes();
+        ClearValuables();
 
         int valuableCount = Random.Range(1, 3);
 

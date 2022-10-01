@@ -6,33 +6,30 @@ using UnityEngine;
 public class ValuablesSpawner : MonoBehaviour
 {
     public GameObject m_ValuablePrefab;
-    public Vector2[] m_SpawnPositions;
-    void Start()
-    {
-        
-    }
+    public Transform[] m_SpawnTransforms;
 
-    void Clear()
-    {
+    public int m_MinValuables;
+    public int m_MaxValuables;
 
-    }
-
-    public void Generate(ValuableObject[] valuablesPool, Dictionary<ValuableObject, int> requiredValuables)
+    public void Clear()
     {
         GameObject[] previousValuables = GameObject.FindGameObjectsWithTag("Valuable");
         foreach (GameObject obj in previousValuables)
         {
             Destroy(obj);
         }
+    }
 
-        int totalCount = Random.Range(1, 5) + CountRequiredValuables(requiredValuables);
+    public void Generate(ValuableObject[] valuablesPool, Dictionary<ValuableObject, int> requiredValuables)
+    {
+        int totalCount = Random.Range(m_MinValuables, m_MaxValuables) + CountRequiredValuables(requiredValuables);
 
 
-        List<Vector2> defaultPositions = m_SpawnPositions.ToList();
+        List<Vector2> defaultPositions = m_SpawnTransforms.ToList().ConvertAll(c => new Vector2(c.position.x, c.position.y));
         Queue<Vector2> availableSpawnPositions = new Queue<Vector2>(totalCount);
         for (int i = 0; i < totalCount; i++)
         {
-            int rolledIndex = Random.Range(0, defaultPositions.Count - 1);
+            int rolledIndex = Random.Range(0, defaultPositions.Count);
             availableSpawnPositions.Enqueue(defaultPositions[rolledIndex]);
             defaultPositions.Remove(defaultPositions[rolledIndex]);
         }
@@ -49,7 +46,7 @@ public class ValuablesSpawner : MonoBehaviour
 
         for (int i = 0; i < availableSpawnPositions.Count; i++)
         {
-            SpawnValuable(valuablesPool[Random.Range(0, valuablesPool.Length - 1)], availableSpawnPositions.Dequeue());
+            SpawnValuable(valuablesPool[Random.Range(0, valuablesPool.Length)], availableSpawnPositions.Dequeue());
         }
     }
 
