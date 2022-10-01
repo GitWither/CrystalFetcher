@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public int m_Money = 0;
 
     public Transform m_PlayerCamera;
+    public Rigidbody2D m_Rigidbody;
 
     private Vector3 m_CurrentVelocity;
     void Start()
@@ -19,8 +20,15 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+
     void Update()
+    {
+        Vector3 cameraTargetPos = new Vector3(transform.position.x, transform.position.y, -10);
+        m_PlayerCamera.position =
+            Vector3.SmoothDamp(m_PlayerCamera.position, cameraTargetPos, ref m_CurrentVelocity, 0.2f, 5f);
+    }
+    // Update is called once per frame
+    void FixedUpdate()
     {
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
@@ -29,11 +37,11 @@ public class PlayerController : MonoBehaviour
         Vector2 targetPosition = new Vector2(xAxis * Time.deltaTime * m_Speed, yAxis * Time.deltaTime * m_Speed);
 
         currentTransform += targetPosition;
-        this.transform.position = currentTransform;
+        //this.transform.position = currentTransform;
+        m_Rigidbody.MovePosition(currentTransform);
+        //m_Rigidbody.AddForce(new Vector2(xAxis * Time.deltaTime * m_Speed, yAxis * Time.deltaTime * m_Speed), ForceMode2D.);
+        //m_Rigidbody.velocity = targetPosition;
 
-        Vector3 cameraTargetPos = new Vector3(currentTransform.x, currentTransform.y, -10);
-        m_PlayerCamera.position =
-            Vector3.SmoothDamp(m_PlayerCamera.position, cameraTargetPos, ref m_CurrentVelocity, 0.5f, 5f);
     }
 
 
