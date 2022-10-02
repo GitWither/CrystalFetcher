@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,10 +12,14 @@ public class PlayerController : MonoBehaviour
 
     public int m_Money = 0;
 
+    public TMP_Text m_MoneyText;
+
     public Transform m_PlayerCamera;
     public Rigidbody2D m_Rigidbody;
 
     private Vector3 m_CurrentVelocity;
+
+    public int Money => m_Money;
     void Start()
     {
         
@@ -25,7 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 cameraTargetPos = new Vector3(transform.position.x, transform.position.y, -10);
         m_PlayerCamera.position =
-            Vector3.SmoothDamp(m_PlayerCamera.position, cameraTargetPos, ref m_CurrentVelocity, 0.05f, 5f);
+            Vector3.SmoothDamp(m_PlayerCamera.position, cameraTargetPos, ref m_CurrentVelocity, 0.2f, 15f);
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -54,18 +59,19 @@ public class PlayerController : MonoBehaviour
         if (m_GameManager.IsExpectedValuable(val.m_ValuableObject))
         {
             m_GameManager.Collect(val.m_ValuableObject);
-            m_Money += 120;
+            UpdateMoney(m_Money + 120);
         }
         else
         {
-            m_Money -= 50;
+            UpdateMoney(m_Money - 200);
         }
 
         Destroy(col.gameObject);
     }
 
-    private void OnGUI()
+    public void UpdateMoney(int value)
     {
-        GUI.Label(new Rect(0, 75, 150, 150), $"{m_Money} $");
+        m_Money = value;
+        m_MoneyText.text = $"$ {m_Money}";
     }
 }

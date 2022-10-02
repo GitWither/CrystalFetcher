@@ -30,7 +30,7 @@ public class Valuable : MonoBehaviour
         m_AudioSource.Play();
         m_ParticleSystem.Play();
 
-        Destroy(m_AudioSource.gameObject, 2);
+        Destroy(m_AudioSource.gameObject, 3);
         Destroy(m_ParticleSystem.gameObject, 2);
     }
 }

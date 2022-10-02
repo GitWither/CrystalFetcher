@@ -34,7 +34,6 @@ public class ValuablesSpawner : MonoBehaviour
             defaultPositions.Remove(defaultPositions[rolledIndex]);
         }
 
-        print(availableSpawnPositions.Count);
         foreach (KeyValuePair<ValuableObject, int> pair in requiredValuables)
         {
             for (int i = 0; i < pair.Value; i++)
@@ -42,7 +41,6 @@ public class ValuablesSpawner : MonoBehaviour
                 SpawnValuable(pair.Key, availableSpawnPositions.Dequeue());
             }
         }
-        print(availableSpawnPositions.Count);
 
         for (int i = 0; i < availableSpawnPositions.Count; i++)
         {

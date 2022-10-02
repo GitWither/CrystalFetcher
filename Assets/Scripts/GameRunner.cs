@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameRunner : MonoBehaviour
 {
@@ -14,10 +17,14 @@ public class GameRunner : MonoBehaviour
     public Vector2 m_SpawnPosition;
 
 
+    public PlayerController m_PlayerController;
 
+
+    private int m_CurrentRound = 0;
     private int m_ElapsedTicks = 0;
     private int m_RoundCooldown = 0;
     private bool m_RoundRunning = false;
+    private bool m_GameEnded = false;
     public Transform m_Player;
     public ValuableObject[] m_ValuablePool;
     private Dictionary<ValuableObject, int> m_CurrentValuables = new Dictionary<ValuableObject, int>();
@@ -25,8 +32,15 @@ public class GameRunner : MonoBehaviour
 
     public ValuablesSpawner m_Spawner;
 
+    public AudioSource m_RoundFinishedSource;
+    public AudioSource m_RoundFailedSource;
+    public AudioSource m_RoundStartSource;
+
     [Header("UI")]
     public Slider m_ProgressSlider;
+
+    public TMP_Text m_CurrentRoundText;
+    public TMP_Text m_CurrentSecondsText;
 
     public Image m_ProgressFill;
     public Sprite m_ProgressRound;
@@ -34,6 +48,11 @@ public class GameRunner : MonoBehaviour
 
     public GameObject m_InfoPrefab;
     public GameObject m_NeededCrystalsPanel;
+    public GameObject m_EndGameScreen;
+
+    public Animator m_EndGameAnimation;
+
+
 
     void Start()
     {
@@ -42,16 +61,25 @@ public class GameRunner : MonoBehaviour
 
     void Update()
     {
+        m_CurrentSecondsText.text = m_RoundRunning ? (10 - (m_ElapsedTicks / 50f)).ToString(CultureInfo.InvariantCulture) : Math.Floor(4 - m_RoundCooldown / 50f).ToString(CultureInfo.InvariantCulture);
+
         m_ProgressSlider.value = m_RoundRunning ? 1.0f - (m_ElapsedTicks / (float)RoundDuration) : 1.0f - (m_RoundCooldown / (float)RoundCooldownDuration);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (m_PlayerController.Money < 0)
+        {
+            m_RoundRunning = false;
+            m_GameEnded = true;
+            m_EndGameScreen.SetActive(true);
+            m_EndGameAnimation.SetTrigger("ShouldStart");
+        }
 
         if (m_RoundRunning)
             m_ElapsedTicks++;
-        else
+        else if (!m_RoundRunning && !m_GameEnded)
         {
             m_RoundCooldown++;
         }
@@ -79,6 +107,15 @@ public class GameRunner : MonoBehaviour
 
     void EndRound()
     {
+        if (m_CurrentValuables.Count == 0)
+        {
+            m_RoundFinishedSource.Play();
+        }
+        else
+        {
+            m_PlayerController.UpdateMoney(m_PlayerController.Money - (200 * m_CurrentValuables.Count));
+            m_RoundFailedSource.Play();
+        }
         ResetPlayerPosition();
         ClearValuables();
         ClearValuablePanel();
@@ -86,7 +123,10 @@ public class GameRunner : MonoBehaviour
 
     void StartRound()
     {
+        m_CurrentRound++;
+        m_CurrentRoundText.text = $"ROUND: {m_CurrentRound}";
         PickValuable();
+        m_RoundStartSource.Play();
 
         m_Spawner.Generate(m_ValuablePool, m_CurrentValuables);
     }
@@ -106,11 +146,11 @@ public class GameRunner : MonoBehaviour
     {
         ClearValuables();
 
-        int valuableCount = Random.Range(1, 3);
+        int valuableCount = Random.Range(1, Mathf.CeilToInt(m_CurrentRound / 2f));
 
         for (int i = 0; i < valuableCount; i++)
         {
-            int count = Random.Range(1, 3);
+            int count = Random.Range(1, 2);
 
             ValuableObject rolledValuableObject = m_ValuablePool[Random.Range(0, m_ValuablePool.Length)];
 
@@ -163,18 +203,5 @@ public class GameRunner : MonoBehaviour
     void ResetPlayerPosition()
     {
         m_Player.position = m_SpawnPosition;
-    }
-
-    void OnGUI()
-    {
-        GUI.Label(new Rect(0, 0, 150, 150), (m_ElapsedTicks / 50 + 1).ToString());
-        GUI.Label(new Rect(0, 25, 150, 150), (m_RoundCooldown / 50 + 1).ToString());
-
-        int yOffset = 50;
-        foreach (KeyValuePair<ValuableObject, int> obj in m_CurrentValuables)
-        {
-            GUI.Label(new Rect(0, yOffset, 150, 150), obj.Key.m_ValuableName + " x" + obj.Value);
-            yOffset += 25;
-        }
     }
 }
