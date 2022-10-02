@@ -21,6 +21,7 @@ public class GameRunner : MonoBehaviour
     public Transform m_Player;
     public ValuableObject[] m_ValuablePool;
     private Dictionary<ValuableObject, int> m_CurrentValuables = new Dictionary<ValuableObject, int>();
+    private Dictionary<ValuableObject, GameObject> m_PanelObjects = new Dictionary<ValuableObject, GameObject>();
 
     public ValuablesSpawner m_Spawner;
 
@@ -80,6 +81,7 @@ public class GameRunner : MonoBehaviour
     {
         ResetPlayerPosition();
         ClearValuables();
+        ClearValuablePanel();
     }
 
     void StartRound()
@@ -123,11 +125,22 @@ public class GameRunner : MonoBehaviour
 
     }
 
+    void ClearValuablePanel()
+    {
+        foreach (var pair in m_PanelObjects)
+        {
+            Destroy(pair.Value);
+        }
+
+        m_PanelObjects.Clear();
+    }
+
     void AddValuableToPanel(ValuableObject obj, int count)
     {
         GameObject info = Instantiate(m_InfoPrefab, m_NeededCrystalsPanel.transform);
         info.GetComponentInChildren<Image>().sprite = obj.m_Sprite;
         info.GetComponentInChildren<TMP_Text>().text = $"x{count}";
+        m_PanelObjects.Add(obj, info);
     }
 
     public void Collect(ValuableObject obj)
@@ -135,10 +148,14 @@ public class GameRunner : MonoBehaviour
         if (m_CurrentValuables[obj] - 1 == 0)
         {
             m_CurrentValuables.Remove(obj);
+            Destroy(m_PanelObjects[obj]);
+            m_PanelObjects.Remove(obj);
         }
         else
         {
             this.m_CurrentValuables[obj]--;
+
+            m_PanelObjects[obj].GetComponentInChildren<TMP_Text>().text = $"x{m_CurrentValuables[obj]}";
         }
 
     }
